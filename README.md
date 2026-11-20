@@ -28,6 +28,8 @@ These are **unsigned/ad-hoc preview builds**. Windows may show an unknown-publis
 
 You do not need Node.js, a terminal, Firebase settings or a configuration file. On the original computer, add any device-only projects to the account through Account & sync before expecting them on another device.
 
+Close Mindscape before installing an update. Reopening the installed application focuses its existing window instead of opening a second copy against the same workspace.
+
 Edits are saved on the device while offline and queued for sync when connectivity returns. Google sync uses a quota-limited free service. If the shared quota is exhausted, work remains saved on the device and retries back off. Local work remains available without signing in.
 
 ## Files, backups and privacy
