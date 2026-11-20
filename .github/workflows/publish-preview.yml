@@ -1,0 +1,103 @@
+name: Publish verified Mindscape preview
+on:
+  workflow_dispatch:
+    inputs:
+      manifest:
+        description: 'Verified native-artifact manifest prepared by the private release tools'
+        required: true
+        type: string
+permissions:
+  contents: write
+concurrency:
+  group: mindscape-preview-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.repository == 'Razahamid2003/mindscape-releases' && github.actor == 'Razahamid2003'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Verify native artifact digests, extract allowed files, and verify installer checksums
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, re, shutil, stat, urllib.parse, urllib.request, zipfile
+          event = json.loads(pathlib.Path(os.environ['GITHUB_EVENT_PATH']).read_text())
+          data = json.loads(event['inputs']['manifest'])
+          def require(value, message):
+              if not value: raise RuntimeError(message)
+          require(data.get('product') == 'Mindscape' and data.get('publisher') == 'Zenith AI', 'Wrong release identity')
+          version, tag = data['version'], data['tag']
+          require(re.fullmatch(r'\d+\.\d+\.\d+', version) and tag == 'v' + version + '-preview.1', 'Invalid preview version')
+          require(re.fullmatch(r'[0-9a-f]{64}', data['productInputsHash']), 'Missing product-input fingerprint')
+          require(len(data['notes']) < 20000, 'Release notes too large')
+          targets = {'linux', 'windows', 'macos-intel', 'macos-arm'}
+          require({a['target'] for a in data['artifacts']} == targets and len(data['artifacts']) == 4, 'Incomplete native coverage')
+          require({j['target'] for j in data['jobs']} == targets and all(j['conclusion'] == 'success' for j in data['jobs']), 'Native acceptance failed')
+          names = {f'Mindscape-{version}-preview-windows-x64.exe', f'Mindscape-{version}-preview-linux-x86_64.AppImage', f'Mindscape-{version}-preview-linux-amd64.deb'}
+          names.update(f'Mindscape-{version}-preview-macos-{arch}.{ext}' for arch in ('x64','arm64') for ext in ('dmg','zip'))
+          sboms = {'sbom-linux-x64.json','sbom-windows-x64.json','sbom-macos-x64.json','sbom-macos-arm64.json'}
+          sums = {'SHA256SUMS-linux-x64.txt','SHA256SUMS-windows-x64.txt','SHA256SUMS-macos-x64.txt','SHA256SUMS-macos-arm64.txt'}
+          allowed = names | sboms | sums
+          stage, output = pathlib.Path('staged-native'), pathlib.Path('public-assets')
+          stage.mkdir(); output.mkdir()
+          seen, expected, records = set(), {}, []
+          for artifact in data['artifacts']:
+              url = artifact['downloadUrl']; parsed = urllib.parse.urlparse(url)
+              require(parsed.scheme == 'https' and parsed.hostname and not parsed.username and not parsed.password and parsed.port in (None,443) and (parsed.hostname.endswith('.blob.core.windows.net') or parsed.hostname.endswith('.actions.githubusercontent.com') or parsed.hostname in ('objects.githubusercontent.com','release-assets.githubusercontent.com')), 'Unapproved artifact download host')
+              require(re.fullmatch(r'[0-9a-f]{64}', artifact['sha256']), 'Missing native artifact digest')
+              print('::add-mask::' + url)
+              archive = stage / (artifact['target'] + '.zip')
+              digest, size = hashlib.sha256(), 0
+              try:
+                  with urllib.request.urlopen(url, timeout=60) as response, archive.open('xb') as target:
+                      while True:
+                          chunk = response.read(1024*1024)
+                          if not chunk: break
+                          size += len(chunk); require(size <= 750000000, 'Artifact exceeds download limit')
+                          digest.update(chunk); target.write(chunk)
+              except Exception:
+                  raise RuntimeError('Native artifact transfer failed: ' + artifact['target']) from None
+              require(digest.hexdigest() == artifact['sha256'], 'Native artifact digest mismatch')
+              with zipfile.ZipFile(archive) as package:
+                  entries = package.infolist()
+                  require(len(entries) <= 16 and sum(e.file_size for e in entries) <= 750000000, 'Artifact exceeds extraction limits')
+                  for entry in entries:
+                      name = entry.filename
+                      require(name in allowed and name not in seen and not entry.is_dir(), 'Unexpected or duplicate artifact entry')
+                      require(stat.S_IFMT(entry.external_attr >> 16) in (0,stat.S_IFREG), 'Artifact contains a symbolic link or special file')
+                      seen.add(name); destination = stage / name
+                      with package.open(entry) as source, destination.open('xb') as target: shutil.copyfileobj(source, target)
+                      if name in sums:
+                          for line in destination.read_text().strip().splitlines():
+                              match = re.fullmatch(r'([0-9a-f]{64})  ([\w.-]+)', line)
+                              require(match and match[2] in names and match[2] not in expected, 'Invalid installer checksum entry')
+                              expected[match[2]] = match[1]
+          require(seen == allowed and set(expected) == names, 'Release files or checksums are missing')
+          for name in sorted(names):
+              file = stage / name
+              with file.open('rb') as content: digest = hashlib.file_digest(content, 'sha256').hexdigest()
+              require(digest == expected[name], 'Installer checksum mismatch: ' + name)
+              shutil.copyfile(file, output / name)
+              records.append({'name':name,'sha256':digest,'bytes':file.stat().st_size})
+          for name in sboms:
+              sbom = json.loads((stage/name).read_text())
+              require(sbom.get('bomFormat') == 'CycloneDX' and sbom['metadata']['component']['name'] == 'Mindscape' and sbom['metadata']['component']['version'] == version, 'Wrong dependency SBOM')
+              shutil.copyfile(stage/name, output/name)
+          (output/'SHA256SUMS.txt').write_text(''.join(f"{r['sha256']}  {r['name']}\n" for r in records))
+          provenance = {'schemaVersion':1,'product':'Mindscape','publisher':'Zenith AI','version':version,'channel':'preview','platformSigning':'unsigned or ad-hoc; not notarized','productInputsHash':data['productInputsHash'],'jobs':data['jobs'],'artifacts':[{k:a[k] for k in ('target','name','sha256')} for a in data['artifacts']],'files':records}
+          (output/'build-provenance.json').write_text(json.dumps(provenance,indent=2)+'\n')
+          pathlib.Path('release-tag.txt').write_text(tag)
+          pathlib.Path('release-notes.md').write_text(data['notes'])
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as summary:
+              summary.write('Verified all four native targets, four artifact digests, seven installer checksums, and four SBOMs.\n')
+          PY
+      - name: Publish the verified preview downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          tag="$(cat release-tag.txt)"
+          assets=(public-assets/*)
+          gh release create "$tag" "${assets[@]}" --repo "$GITHUB_REPOSITORY" --title "Mindscape ${tag#v}" --notes-file release-notes.md --draft --prerelease
+          gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --draft=false --prerelease
