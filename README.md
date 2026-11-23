@@ -2,7 +2,7 @@
 
 A living visual workspace for projects, thoughts and research, by **Zenith AI**.
 
-[Download the desktop preview](https://github.com/Razahamid2003/mindscape-releases/releases/tag/v0.1.1-preview.1) · [Get help or report a problem](https://github.com/Razahamid2003/mindscape-releases/issues)
+[Download the desktop preview](https://github.com/Razahamid2003/mindscape-releases/releases/tag/v0.1.2-preview.1) · [Get help or report a problem](https://github.com/Razahamid2003/mindscape-releases/issues)
 
 ## Choose your download
 
@@ -28,7 +28,7 @@ These are **unsigned/ad-hoc preview builds**. Windows may show an unknown-publis
 
 You do not need Node.js, a terminal, Firebase settings or a configuration file. On the original computer, add any device-only projects to the account through Account & sync before expecting them on another device.
 
-Close Mindscape before installing an update. Reopening the installed application focuses its existing window instead of opening a second copy against the same workspace.
+Install version 0.1.2 once to enable future verified updates. Existing projects, Google sign-in and offline changes remain in the same data directory. Reopening Mindscape focuses its existing window instead of opening a second copy against the same workspace.
 
 Edits are saved on the device while offline and queued for sync when connectivity returns. Google sync uses a quota-limited free service. If the shared quota is exhausted, work remains saved on the device and retries back off. Local work remains available without signing in.
 
@@ -46,7 +46,16 @@ Workspace content is stored locally and, when cloud sync is enabled, in the acco
 
 ## Preview updates and verification
 
-Install updates manually from this repository for now. Automatic verified downloads and an explicit **Restart and update** action remain planned; this preview does not silently replace itself.
+Starting with **0.1.2**, Mindscape checks for updates shortly after opening and approximately every six hours. New updates download automatically from this public repository, without Google sign-in or configuration files. Open **Workspace menu → App updates** in V2 or **Updates** in V1 to see progress, release notes, retry, or show a verified download.
+
+Installation always needs your approval in a native confirmation dialog. **Later** keeps Mindscape open and also prevents installation on ordinary quit. Before installation, open notes must save successfully; Mindscape creates local recovery copies and preserves pending offline changes.
+
+- **Windows:** after approval, the per-user installer updates the existing application and restarts it. Windows may request system approval.
+- **Linux AppImage:** after approval, the image is replaced and Mindscape restarts. One `.previous` image remains for recovery. Keep the AppImage in a folder you own and can write to.
+- **macOS:** the verified disk image opens after approval and Mindscape closes. Drag the replacement into Applications, replace the existing app, and reopen it. This free preview keeps the final installation step visible.
+- **Debian/Ubuntu:** the verified package opens in the system installer after approval. Authorize installation and reopen Mindscape. If no package installer is available, Mindscape reveals the verified file and stays open.
+
+The update feed is signed with Ed25519. Trust keys are built into the installed app; every downloaded file is checked against its signed SHA-256 digest, device target and size, and checked again before installation. These free release signatures authenticate the download; they do not replace Windows publisher certificates or Apple Developer ID/notarization. Interrupted downloads can be retried and verified downloads can be installed offline.
 
 The release includes SHA-256 checksums, dependency SBOMs and build provenance. Third-party license notices are included inside each application. The application source is private; this repository contains downloads, release notes, support information and a small release-publishing workflow. Distributed desktop code can still be inspected, so private account credentials and release keys are never included in the application payload.
 
