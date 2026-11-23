@@ -92,7 +92,7 @@ jobs:
           with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as summary:
               summary.write('Verified all four native targets, four artifact digests, seven installer checksums, and four SBOMs.\n')
           PY
-      - name: Publish the verified preview downloads
+      - name: Stage the verified preview downloads for local signature approval
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -100,4 +100,5 @@ jobs:
           tag="$(cat release-tag.txt)"
           assets=(public-assets/*)
           gh release create "$tag" "${assets[@]}" --repo "$GITHUB_REPOSITORY" --title "Mindscape ${tag#v}" --notes-file release-notes.md --draft --prerelease
-          gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --draft=false --prerelease
+          # The private release tool authenticates provenance and signs metadata locally.
+          # It publishes the draft and advances the public feed only after verification.
