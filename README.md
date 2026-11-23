@@ -2,7 +2,7 @@
 
 A living visual workspace for projects, thoughts and research, by **Zenith AI**.
 
-[Download the desktop preview](https://github.com/Razahamid2003/mindscape-releases/releases/tag/v0.1.0-preview.1) · [Get help or report a problem](https://github.com/Razahamid2003/mindscape-releases/issues)
+[Download the desktop preview](https://github.com/Razahamid2003/mindscape-releases/releases/tag/v0.1.1-preview.1) · [Get help or report a problem](https://github.com/Razahamid2003/mindscape-releases/issues)
 
 ## Choose your download
 
@@ -31,6 +31,12 @@ You do not need Node.js, a terminal, Firebase settings or a configuration file. 
 Close Mindscape before installing an update. Reopening the installed application focuses its existing window instead of opening a second copy against the same workspace.
 
 Edits are saved on the device while offline and queued for sync when connectivity returns. Google sync uses a quota-limited free service. If the shared quota is exhausted, work remains saved on the device and retries back off. Local work remains available without signing in.
+
+## Manage large maps
+
+In Outline, **Select thoughts** enables checkboxes, Shift-click range selection and **Select all shown**. In Graph, use **Select** or Shift-click. **Delete selected** opens a permanent-deletion review: keep surviving children or include whole branches. The central thought is protected, and a changed hierarchy invalidates the review. Deletion cannot be undone; export a backup first if you may need the content later.
+
+Separated branches keep independent hierarchies. They can cross-link to any thought in the project without reparenting it. Use **Move to branch** when you want to change a parent. **Add child** closes when you click outside its popup or select another thought.
 
 ## Files, backups and privacy
 
