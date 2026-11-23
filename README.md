@@ -2,7 +2,7 @@
 
 A living visual workspace for projects, thoughts and research, by **Zenith AI**.
 
-[Download the desktop preview](https://github.com/Razahamid2003/mindscape-releases/releases/tag/v0.1.2-preview.1) · [Get help or report a problem](https://github.com/Razahamid2003/mindscape-releases/issues)
+[Download the desktop preview](https://github.com/Razahamid2003/mindscape-releases/releases/tag/v0.1.3-preview.1) · [Get help or report a problem](https://github.com/Razahamid2003/mindscape-releases/issues)
 
 ## Choose your download
 
@@ -28,11 +28,13 @@ These are **unsigned/ad-hoc preview builds**. Windows may show an unknown-publis
 
 You do not need Node.js, a terminal, Firebase settings or a configuration file. On the original computer, add any device-only projects to the account through Account & sync before expecting them on another device.
 
-Install version 0.1.2 once to enable future verified updates. Existing projects, Google sign-in and offline changes remain in the same data directory. Reopening Mindscape focuses its existing window instead of opening a second copy against the same workspace.
+Install version 0.1.3 or later to get the child-visibility fix and verified updates. Existing projects, Google sign-in and offline changes remain in the same data directory. Reopening Mindscape focuses its existing window instead of opening a second copy against the same workspace.
 
 Edits are saved on the device while offline and queued for sync when connectivity returns. Google sync uses a quota-limited free service. If the shared quota is exhausted, work remains saved on the device and retries back off. Local work remains available without signing in.
 
 ## Manage large maps
+
+Folded branches show an arrow and a `+N` hidden-thought count on their canvas label. Select the label or node to expand it. **Show hidden** clears folds, hidden groups and filters in one click. Selecting a deep branch reveals its immediate children; zooming out still reduces small details. Find and Add Child reveal the thought you choose.
 
 In Outline, **Select thoughts** enables checkboxes, Shift-click range selection and **Select all shown**. In Graph, use **Select** or Shift-click. **Delete selected** opens a permanent-deletion review: keep surviving children or include whole branches. The central thought is protected, and a changed hierarchy invalidates the review. Deletion cannot be undone; export a backup first if you may need the content later.
 
