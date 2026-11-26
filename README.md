@@ -2,7 +2,7 @@
 
 A living visual workspace for projects, thoughts and research, by **Zenith AI**.
 
-[Download the desktop preview](https://github.com/Razahamid2003/mindscape-releases/releases/tag/v0.1.3-preview.1) · [Get help or report a problem](https://github.com/Razahamid2003/mindscape-releases/issues)
+[Download the desktop preview](https://github.com/Razahamid2003/mindscape-releases/releases/tag/v0.1.4-preview.1) · [Get help or report a problem](https://github.com/Razahamid2003/mindscape-releases/issues)
 
 ## Choose your download
 
@@ -28,7 +28,7 @@ These are **unsigned/ad-hoc preview builds**. Windows may show an unknown-publis
 
 You do not need Node.js, a terminal, Firebase settings or a configuration file. On the original computer, add any device-only projects to the account through Account & sync before expecting them on another device.
 
-Install version 0.1.3 or later to get the child-visibility fix and verified updates. Existing projects, Google sign-in and offline changes remain in the same data directory. Reopening Mindscape focuses its existing window instead of opening a second copy against the same workspace.
+Version **0.1.4-preview.1** adds shared projects, collaborative rich-text notes and adaptive graph performance while retaining the child-visibility fix and verified updater. Existing projects, Google sign-in and offline changes remain in the same data directory. Reopening Mindscape focuses its existing window instead of opening a second copy against the same workspace.
 
 Edits are saved on the device while offline and queued for sync when connectivity returns. Google sync uses a quota-limited free service. If the shared quota is exhausted, work remains saved on the device and retries back off. Local work remains available without signing in.
 
@@ -39,6 +39,14 @@ Folded branches show an arrow and a `+N` hidden-thought count on their canvas la
 In Outline, **Select thoughts** enables checkboxes, Shift-click range selection and **Select all shown**. In Graph, use **Select** or Shift-click. **Delete selected** opens a permanent-deletion review: keep surviving children or include whole branches. The central thought is protected, and a changed hierarchy invalidates the review. Deletion cannot be undone; export a backup first if you may need the content later.
 
 Separated branches keep independent hierarchies. They can cross-link to any thought in the project without reparenting it. Use **Move to branch** when you want to change a parent. **Add child** closes when you click outside its popup or select another thought.
+
+## Shared projects and scene performance
+
+Create an organization using **Team**, then invite a member using their Google email. Invitations are single-use, with Owner, Editor and Viewer access. Sharing creates an explicit copy of the chosen project; its private original remains private. File contents and local paths are excluded from that copy.
+
+Members can edit a shared map and its notes together, with live cursors and selections. Offline note edits merge when the connection returns. Conflicting graph edits open a review rather than silently replacing another person's work. Note history and local recovery protect drafts. Collaborators need a current Mindscape version and must sign in with the Google account named in their invitation.
+
+In Appearance, choose the adaptive scene setting or battery-saving mode to reduce ambient animation and particle work. Camera movement stays responsive. Firebase remains on its quota-limited free plan; an exhausted shared allowance can delay live updates, while local edits remain saved. This preview does not promise an unlimited team size.
 
 ## Files, backups and privacy
 
@@ -56,6 +64,22 @@ Installation always needs your approval in a native confirmation dialog. **Later
 - **Linux AppImage:** after approval, the image is replaced and Mindscape restarts. One `.previous` image remains for recovery. Keep the AppImage in a folder you own and can write to.
 - **macOS:** the verified disk image opens after approval and Mindscape closes. Drag the replacement into Applications, replace the existing app, and reopen it. This free preview keeps the final installation step visible.
 - **Debian/Ubuntu:** the verified package opens in the system installer after approval. Authorize installation and reopen Mindscape. If no package installer is available, Mindscape reveals the verified file and stays open.
+
+### Update on Linux
+
+For an existing Mindscape **0.1.2 or newer**, open **Workspace menu → App updates → Check for updates**. Wait for **0.1.4** to finish downloading and verifying.
+
+- **AppImage:** choose **Install & restart…**, then approve the confirmation. Keep the AppImage in a writable folder owned by your account.
+- **Debian/Ubuntu:** choose **Review & install…**, approve the confirmation, finish the system package installer and reopen Mindscape. Use **Show download** if you need to locate the verified package.
+
+For an older installation or a manual update, download [Mindscape-0.1.4-preview-linux-amd64.deb](https://github.com/Razahamid2003/mindscape-releases/releases/download/v0.1.4-preview.1/Mindscape-0.1.4-preview-linux-amd64.deb). Close Mindscape and open that file in your package installer to install it over the current version. If you saved it in Downloads, you can also run:
+
+```sh
+cd ~/Downloads
+sudo apt install ./Mindscape-0.1.4-preview-linux-amd64.deb
+```
+
+Reopen Mindscape afterward. Keep the existing application data; no uninstall or configuration copying is needed. If you are signed out, use the same Google account to retrieve account-synced projects. Device-only projects remain on the computer where they were created.
 
 The update feed is signed with Ed25519. Trust keys are built into the installed app; every downloaded file is checked against its signed SHA-256 digest, device target and size, and checked again before installation. These free release signatures authenticate the download; they do not replace Windows publisher certificates or Apple Developer ID/notarization. Interrupted downloads can be retried and verified downloads can be installed offline.
 
