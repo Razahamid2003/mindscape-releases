@@ -2,7 +2,7 @@
 
 A living visual workspace for projects, thoughts and research, by **Zenith AI**.
 
-[Download the desktop preview](https://github.com/Razahamid2003/mindscape-releases/releases/tag/v0.1.4-preview.1) · [Get help or report a problem](https://github.com/Razahamid2003/mindscape-releases/issues)
+[Download the desktop preview](https://github.com/Razahamid2003/mindscape-releases/releases/tag/v0.1.5-preview.1) · [Get help or report a problem](https://github.com/Razahamid2003/mindscape-releases/issues)
 
 ## Choose your download
 
@@ -28,7 +28,7 @@ These are **unsigned/ad-hoc preview builds**. Windows may show an unknown-publis
 
 You do not need Node.js, a terminal, Firebase settings or a configuration file. On the original computer, add any device-only projects to the account through Account & sync before expecting them on another device.
 
-Version **0.1.4-preview.1** adds shared projects, collaborative rich-text notes and adaptive graph performance while retaining the child-visibility fix and verified updater. Existing projects, Google sign-in and offline changes remain in the same data directory. Reopening Mindscape focuses its existing window instead of opening a second copy against the same workspace.
+Version **0.1.5-preview.1** installs Linux updates directly from Mindscape, with system approval and automatic restart. It includes shared projects, collaborative rich-text notes and adaptive graph performance from 0.1.4. Existing projects, Google sign-in and offline changes remain in the same data directory. Reopening Mindscape focuses its existing window instead of opening a second copy against the same workspace.
 
 Edits are saved on the device while offline and queued for sync when connectivity returns. Google sync uses a quota-limited free service. If the shared quota is exhausted, work remains saved on the device and retries back off. Local work remains available without signing in.
 
@@ -63,23 +63,30 @@ Installation always needs your approval in a native confirmation dialog. **Later
 - **Windows:** after approval, the per-user installer updates the existing application and restarts it. Windows may request system approval.
 - **Linux AppImage:** after approval, the image is replaced and Mindscape restarts. One `.previous` image remains for recovery. Keep the AppImage in a folder you own and can write to.
 - **macOS:** the verified disk image opens after approval and Mindscape closes. Drag the replacement into Applications, replace the existing app, and reopen it. This free preview keeps the final installation step visible.
-- **Debian/Ubuntu:** the verified package opens in the system installer after approval. Authorize installation and reopen Mindscape. If no package installer is available, Mindscape reveals the verified file and stays open.
+- **Debian/Ubuntu, starting with 0.1.5:** choose Install & restart, then approve Linux’s own administrator prompt. Mindscape installs the verified cached package, checks the installed version and restarts. Cancelling or an error keeps your workspace open and the update ready to retry. No GitHub page, manual download or archive viewer is involved. If a desktop authentication agent is unavailable, Copy install command uses the same verified file.
 
 ### Update on Linux
 
-For an existing Mindscape **0.1.2 or newer**, open **Workspace menu → App updates → Check for updates**. Wait for **0.1.4** to finish downloading and verifying.
+In **Mindscape 0.1.5 or newer**, open **Workspace menu → App updates → Check for updates**. The update downloads and verifies automatically. Choose **Install & restart…** and approve the confirmation. For Debian/Ubuntu, Linux will ask for administrator approval in its own dialog. Mindscape never collects your administrator password. It restarts after the package manager confirms successful installation. AppImage updates replace the writable user-owned image and restart.
 
-- **AppImage:** choose **Install & restart…**, then approve the confirmation. Keep the AppImage in a writable folder owned by your account.
-- **Debian/Ubuntu:** choose **Review & install…**, approve the confirmation, finish the system package installer and reopen Mindscape. Use **Show download** if you need to locate the verified package.
+If you cancel, work stays open and the downloaded update stays ready. A busy package manager or failed installation offers a retry. Systems without a graphical authorization agent can use **Copy install command** and paste it into Terminal; it references the verified local download and needs no visit to this repository.
 
-For an older installation or a manual update, download [Mindscape-0.1.4-preview-linux-amd64.deb](https://github.com/Razahamid2003/mindscape-releases/releases/download/v0.1.4-preview.1/Mindscape-0.1.4-preview-linux-amd64.deb). Close Mindscape and open that file in your package installer to install it over the current version. If you saved it in Downloads, you can also run:
+**One-time upgrade from 0.1.2–0.1.4:** the older app needs one upgrade to obtain the improved installer. Open **App updates → Check for updates**, wait for **0.1.5** to finish downloading, then choose **Show download**. Close Mindscape and install that cached `.deb` using Software Install or your package installer. If double-clicking opens Archive Manager, choose **Open With → Software Install**, or use this command for the standard Linux data location:
+
+```sh
+sudo apt install "${XDG_CONFIG_HOME:-$HOME/.config}/branchline/updates/Mindscape-0.1.5-preview-linux-amd64.deb"
+```
+
+There is no second download or GitHub visit. Subsequent updates use Mindscape’s Install & restart flow. Keep the existing application data; no uninstall or configuration copying is needed.
+
+For a first installation or a version older than 0.1.2, download [Mindscape-0.1.5-preview-linux-amd64.deb](https://github.com/Razahamid2003/mindscape-releases/releases/download/v0.1.5-preview.1/Mindscape-0.1.5-preview-linux-amd64.deb). If saved in Downloads, close Mindscape and install it with your package installer, or run:
 
 ```sh
 cd ~/Downloads
-sudo apt install ./Mindscape-0.1.4-preview-linux-amd64.deb
+sudo apt install ./Mindscape-0.1.5-preview-linux-amd64.deb
 ```
 
-Reopen Mindscape afterward. Keep the existing application data; no uninstall or configuration copying is needed. If you are signed out, use the same Google account to retrieve account-synced projects. Device-only projects remain on the computer where they were created.
+Reopen Mindscape. Use the same Google account to retrieve account-synced projects; device-only projects remain on their original computer.
 
 The update feed is signed with Ed25519. Trust keys are built into the installed app; every downloaded file is checked against its signed SHA-256 digest, device target and size, and checked again before installation. These free release signatures authenticate the download; they do not replace Windows publisher certificates or Apple Developer ID/notarization. Interrupted downloads can be retried and verified downloads can be installed offline.
 
